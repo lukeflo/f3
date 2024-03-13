@@ -143,12 +143,6 @@ get_ls_colors() {
     export "${ls_cols[@]}" &>/dev/null
 }
 
-get_w3m_path() {
-    # Find the path to the w3m-img library.
-    w3m_paths=(/usr/{pkg/,}{local/,}{bin,lib,libexec,lib64,libexec64}/w3m/w3mi*)
-    read -r w3m _ < <(type -p "$FFF_W3M_PATH" w3mimgdisplay "${w3m_paths[@]}")
-}
-
 get_mime_type() {
     # Get a file's mime_type.
     mime_type=$(file "-${file_flags:-biL}" "$1" 2>/dev/null)
@@ -362,7 +356,7 @@ draw_dir() {
 }
 
 draw_img() {
-    # Draw an image file on the screen using w3m-img.
+    # Draw an image file on the screen using sixel and chafa.
     # We can use the framebuffer; set win_info_cmd as appropriate.
     [[ $(tty) == /dev/tty[0-9]* && -w /dev/fb0 ]] &&
         win_info_cmd=fbset
@@ -376,9 +370,9 @@ draw_img() {
     [[ $mime_type != image/* ]] &&
         return
 
-    # w3m-img isn't installed, do nothing.
-    type -p "$w3m" &>/dev/null || {
-        cmd_line "error: Couldn't find 'w3m-img', is it installed?"
+    # if chafa isn't installed, do nothing.
+    type -p "$(command -v chafa)" &>/dev/null || {
+        cmd_line "error: Couldn't find 'chafa', is it installed?"
         return
     }
 
@@ -403,45 +397,15 @@ draw_img() {
     fi
 
     # Get the image size in pixels.
-    read -r img_width img_height < <("$w3m" <<< "5;${list[scroll]}")
-
-    # Subtract the status_line area from the image size.
-    ((HEIGHT=HEIGHT-HEIGHT*5/LINES))
-
-    ((img_width > WIDTH)) && {
-        ((img_height=img_height*WIDTH/img_width))
-        ((img_width=WIDTH))
-    }
-
-    ((img_height > HEIGHT)) && {
-        ((img_width=img_width*HEIGHT/img_height))
-        ((img_height=HEIGHT))
-    }
+    read -r img_width img_height < <(identify -format "%w %h" "${list[scroll]}")
 
     clear_screen
     status_line "${list[scroll]}"
 
-    # Add a small delay to fix issues in VTE terminals.
-    ((BASH_VERSINFO[0] > 3)) &&
-        read "${read_flags[@]}" -srn 1
-
-    # Display the image.
-    printf '0;1;%s;%s;%s;%s;;;;;%s\n3;\n4\n' \
-        "${FFF_W3M_XOFFSET:-0}" \
-        "${FFF_W3M_YOFFSET:-0}" \
-        "$img_width" \
-        "$img_height" \
-        "${list[scroll]}" | "$w3m" &>/dev/null
+    chafa --format sixels --size 75x --animate off --polite on "${list[scroll]}"
 
     # Wait for user input.
     read -ern 1
-
-    # Clear the image.
-    printf '6;%s;%s;%s;%s\n3;' \
-        "${FFF_W3M_XOFFSET:-0}" \
-        "${FFF_W3M_YOFFSET:-0}" \
-        "$WIDTH" \
-        "$HEIGHT" | "$w3m" &>/dev/null
 
     redraw
 }
@@ -1128,7 +1092,6 @@ main() {
 
     get_os
     get_term_size
-    get_w3m_path
     setup_options
     setup_terminal
     redraw full

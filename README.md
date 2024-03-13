@@ -1,12 +1,9 @@
-# fff (*Fucking Fast File-Manager*)
+# **f3**: fork of fff (*Fucking Fast File-Manager*)
 
-<a href="https://asciinema.org/a/qvNlrFrGB3xKZXb6GkremjZNp" target="_blank"><img src="https://asciinema.org/a/qvNlrFrGB3xKZXb6GkremjZNp.svg" alt="img" height="210px" align="right"/></a>
+**Most text in the following is the original text of @dylanaraps repo. I changed
+only things regarded to image preview with sixel**
 
-A simple file manager written in `bash`.
-
-<a href="https://travis-ci.org/dylanaraps/fff"><img src="https://travis-ci.org/dylanaraps/fff.svg?branch=master"></a>
-<a href="https://github.com/dylanaraps/fff/releases"><img src="https://img.shields.io/github/release/dylanaraps/fff.svg"></a>
-<a href="https://repology.org/metapackage/fff"><img src="https://repology.org/badge/tiny-repos/fff.svg" alt="Packaging status"></a>
+**Almost all credits go to @dylanaraps!**
 
 - It's Fucking Fast 🚀
 - Minimal (*only requires **bash** and coreutils*)
@@ -18,7 +15,7 @@ A simple file manager written in `bash`.
 - Tab completion for all commands!
 - Automatic CD on exit (*see [setup](#cd-on-exit)*)
 - Works as a **file picker** in `vim`/`neovim` ([**link**](https://github.com/dylanaraps/fff.vim))!
-- **Display images with w3m-img!**
+- **Display images with sixel and chafa!**
 - Supports `$CDPATH`.
 
 
@@ -28,7 +25,6 @@ A simple file manager written in `bash`.
 
 * [Dependencies](#dependencies)
 * [Installation](#installation)
-    * [Distros](#distros)
     * [Manual](#manual)
     * [CD on Exit](#cd-on-exit)
         * [Bash and Zsh](#bash-and-zsh)
@@ -58,22 +54,13 @@ A simple file manager written in `bash`.
 
 **Dependencies for image display**
 
-- `w3m-img`
+- `chafa`
+- a [terminal](https://www.arewesixelyet.com/) which can display sixel graphics
 - `xdotool` for X.
 - `fbset` for the framebuffer.
 
 
 ## Installation
-
-### Distros
-
-- KISS Linux (based): `kiss b fff`
-- FreeBSD: `pkg install fff`
-- Haiku: `pkgman install fff`
-- macOS: `brew install fff`
-- Nix: `nix-env -iA fff`
-- Void Linux: `xbps-install -S fff`
-- Arch Linux: `pacman -S fff`
 
 ### Manual
 
@@ -394,7 +381,8 @@ read -srn 1 && key "$REPLY"
 
 ## Using `fff` in vim/neovim as a file picker
 
-See: [**`fff.vim`**](https://github.com/dylanaraps/fff.vim)
+See: [**`fff.vim`**](https://github.com/dylanaraps/fff.vim) **!!! Not tested
+with sixel graphics yet!!!**
 
 
 ## Why?
