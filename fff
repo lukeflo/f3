@@ -367,8 +367,8 @@ draw_img() {
 
     # File isn't an image file, do nothing.
     get_mime_type "${list[scroll]}"
-    [[ $mime_type != image/* ]] &&
-        return
+    # [[ $mime_type != image/* ]] &&
+    #     return
 
     # if chafa isn't installed, do nothing.
     type -p "$(command -v chafa)" &>/dev/null || {
@@ -397,12 +397,37 @@ draw_img() {
     fi
 
     # Get the image size in pixels.
-    read -r img_width img_height < <(identify -format "%w %h" "${list[scroll]}")
+    if [[ $mime_type == image/* ]]; then
+        read -r img_width img_height < <(identify -format "%w %h" "${list[scroll]}")
+    fi
+
+    # # Get the size of the current terminal window or tmux/zellij pane
+    local pane_width
+    local pane_height
+    read -r pane_height pane_width < <(stty size)
+    pane_height=$(($pane_height - 4))
+
+    # set image preview size to some functional values, based on pane/window size
+    if [[ $pane_height -le 25 ]]; then
+        sixel_size="x$pane_height"
+    else
+        sixel_size="x20"
+    fi
 
     clear_screen
     status_line "${list[scroll]}"
 
-    chafa --format sixels --size 75x --animate off --polite on "${list[scroll]}"
+    case "$mime_type" in
+        image/*)
+            chafa --format sixels --view-size $sixel_size --animate off --polite on "${list[scroll]}"
+        ;;
+        text/*) 
+            highlight -O ansi --line-numbers --line-range=1-$pane_height \
+                -V "${list[scroll]}"
+        ;;
+        *) echo "Mime-type not yet supported. Press any button to go back to directory view."
+        ;;
+    esac
 
     # Wait for user input.
     read -ern 1
