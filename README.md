@@ -64,11 +64,10 @@ only things regarded to image preview with sixel**
 
 ### Manual
 
-1. Download `fff`.
-    - Release: https://github.com/dylanaraps/fff/releases/latest
-    - Git: `git clone https://github.com/dylanaraps/fff`
-2. Change working directory to `fff`.
-    - `cd fff`
+1. Download `f3`.
+    - Git: `https://codeberg.org/lukeflo/f3`
+2. Change working directory to `f3`.
+    - `cd f3`
 3. Run `make install` inside the script directory to install the script.
     - **El Capitan**: `make PREFIX=/usr/local install`
     - **Haiku**: `make PREFIX="$(finddir B_USER_NONPACKAGED_DIRECTORY)" MANDIR='$(PREFIX)/documentation/man' DOCDIR='$(PREFIX)/documentation/fff' install`
