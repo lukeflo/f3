@@ -1041,11 +1041,13 @@ key() {
 
         # Open `notesbash` notes management system
         ${FFF_KEY_NOTESBASH:=v})
-            clear_screen
-            reset_terminal
-            notesbash
-            setup_terminal
-            redraw
+            if command -v notesbash >/dev/null 2>&1; then
+                clear_screen
+                reset_terminal
+                notesbash
+                setup_terminal
+                redraw
+            fi
         ;;   
 
         # Refresh current dir.
