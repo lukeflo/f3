@@ -752,6 +752,16 @@ key() {
             open "${list[scroll]}"
         ;;
 
+        # Possibility to open files with a custom editor or programm
+        ${FFF_KEY_OPEN_CUSTOM:=o})
+            if [[ -n $FFF_CUSTOM_EDITOR ]]; then
+                nohup "$FFF_CUSTOM_EDITOR" "${list[scroll]}" &>/dev/null &
+                disown
+            else
+                open "${list[scroll]}"
+            fi
+        ;;
+
         # Go to the parent directory.
         # 'D' is what bash sees when the left arrow is pressed
         # ('\e[D' or '\eOD').
@@ -1028,6 +1038,15 @@ key() {
         ${FFF_KEY_PREVIOUS:=-})
             open "$OLDPWD"
         ;;
+
+        # Open `notesbash` notes management system
+        ${FFF_KEY_NOTESBASH:=v})
+            clear_screen
+            reset_terminal
+            notesbash
+            setup_terminal
+            redraw
+        ;;   
 
         # Refresh current dir.
         ${FFF_KEY_REFRESH:=e})
