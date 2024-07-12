@@ -905,17 +905,21 @@ key() {
                     return
                 }
 
-                # Clear the screen to make room for a prompt if needed.
-                clear_screen
-                reset_terminal
+                # Room for a prompt isn't needed if executing 'trash'
+                if [[ "${file_program[*]}" = "trash" ]]; then
+                    trash "${marked_files[@]}" .
+                else
+                    # Clear the screen to make room for a prompt if needed.
+                    clear_screen
+                    reset_terminal
 
-                stty echo
-                printf '\e[1mfff\e[m: %s\n' "Running ${file_program[0]}"
-                "${file_program[@]}" "${marked_files[@]}" .
-                stty -echo
+                    stty echo
+                    printf '\033[1mnotesbash\033[m: %s\n' "Running ${file_program[0]}"
+                    "${file_program[@]}" "${marked_files[@]}" .
+                    setup_terminal
+                fi
 
                 marked_files=()
-                setup_terminal
                 redraw full
             }
         ;;
