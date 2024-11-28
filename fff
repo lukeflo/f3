@@ -752,16 +752,6 @@ key() {
             open "${list[scroll]}"
         ;;
 
-        # Possibility to open files with a custom editor or programm
-        ${FFF_KEY_OPEN_CUSTOM:=o})
-            if [[ -n $FFF_CUSTOM_EDITOR ]]; then
-                nohup "$FFF_CUSTOM_EDITOR" "${list[scroll]}" &>/dev/null &
-                disown
-            else
-                open "${list[scroll]}"
-            fi
-        ;;
-
         # Go to the parent directory.
         # 'D' is what bash sees when the left arrow is pressed
         # ('\e[D' or '\eOD').
