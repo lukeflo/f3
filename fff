@@ -361,8 +361,8 @@ draw_img() {
     [[ $(tty) == /dev/tty[0-9]* && -w /dev/fb0 ]] &&
         win_info_cmd=fbset
 
-    # X isn't running and we can't use the framebuffer, do nothing.
-    [[ -z $DISPLAY && $win_info_cmd != fbset ]] &&
+    # X or Wayland isn't running and we can't use the framebuffer, do nothing.
+    [[ -z $DISPLAY && -z $WAYLAND_DISPLAY ]] && [[ $win_info_cmd != fbset ]] &&
         return
 
     # File isn't an image file, do nothing.
